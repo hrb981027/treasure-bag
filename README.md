@@ -73,7 +73,7 @@ declare(strict_types=1);
 
 return [
     'service_center_host' => env('TREASURE_BAG_SERVICE_CENTER_HOST', 'http://localhost'),
-    'service' => \TreasureBag\Service\PresetService\PodsService::MEMBER_SERVICE,
+    'service' => \Hrb981027\TreasureBag\Service\PresetService\PodsService::MEMBER_SERVICE,
     'service_hostname' => env('TREASURE_BAG_SERVICE_HOSTNAME', 'localhost'),
     'service_port' => env('TREASURE_BAG_SERVICE_PORT', 9501),
 ];
@@ -94,7 +94,7 @@ namespace App\Controller;
 
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\RequestMapping;
-use TreasureBag\Annotation\Secure;
+use Hrb981027\TreasureBag\Annotation\Secure;
 
 /**
  * @Secure()
@@ -131,7 +131,7 @@ namespace App\Controller;
 
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\RequestMapping;
-use TreasureBag\Annotation\Secure;
+use Hrb981027\TreasureBag\Annotation\Secure;
 
 /**
  * @Controller()
@@ -193,7 +193,7 @@ namespace App\Listener;
 use Hyperf\Event\Annotation\Listener;
 use Hyperf\Event\Contract\ListenerInterface;
 use Hyperf\Framework\Event\OnStart;
-use TreasureBag\Service\CenterClient;
+use Hrb981027\TreasureBag\Service\CenterClient;
 
 /**
  * @Listener()
@@ -236,8 +236,8 @@ namespace App\Controller;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\RequestMapping;
-use TreasureBag\Service\PresetService\PodsService;
-use TreasureBag\Service\RouterClient;
+use Hrb981027\TreasureBag\Service\PresetService\PodsService;
+use Hrb981027\TreasureBag\Service\RouterClient;
 
 /**
  * @Controller()
@@ -292,8 +292,8 @@ namespace App\Controller;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\RequestMapping;
-use TreasureBag\PresetEvent\PodsEvent;
-use TreasureBag\Service\EventClient;
+use Hrb981027\TreasureBag\PresetEvent\PodsEvent;
+use Hrb981027\TreasureBag\Service\EventClient;
 
 /**
  * @Controller()
@@ -339,8 +339,8 @@ namespace App\Controller;
 
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\RequestMapping;
-use TreasureBag\Annotation\Subscribe;
-use TreasureBag\PresetEvent\PodsEvent;
+use Hrb981027\TreasureBag\Annotation\Subscribe;
+use Hrb981027\TreasureBag\PresetEvent\PodsEvent;
 
 /**
  * @Controller()
@@ -362,4 +362,69 @@ class ApiController extends AbstractController
         ];
     }
 }
+```
+
+## 枚举类
+
+`Enum` 类提供了 `toArray` 和 `inArray` 方法，如需使用该方法，可继承此类
+
+## 标准响应
+
+响应代码值枚举类放置于 `Hrb981027\TreasureBag\Lib\Enum\ResponseCode`
+
+标准响应体类放置于 `Hrb981027\TreasureBag\Lib\ResponseContent\StandardResponseContent`，示例如下
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use Hrb981027\TreasureBag\Lib\Enum\ResponseCode;
+use Hrb981027\TreasureBag\Lib\ResponseContent\StandardResponseContent;
+use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\RequestMapping;
+
+/**
+ * @Controller()
+ */
+class ApiController extends AbstractController
+{
+    /**
+     * @RequestMapping(path="test", methods={"GET"})
+     */
+    public function test()
+    {
+        $standardResponseContent = new StandardResponseContent();
+
+        $standardResponseContent->setCode(ResponseCode::SUCCESS);
+        $standardResponseContent->setMessage('成功');
+        $standardResponseContent->setData([
+            'hello' => 'world'
+        ]);
+
+        return $this->response->json($standardResponseContent->toArray());
+    }
+}
+```
+
+## 标准异常处理
+
+配置文件位于 `config/autoload/exceptions.php` 将 `\Hrb981027\TreasureBag\Exception\Handler\StandardExceptionHandler::class` 配置在对应的 `server` 下即可，示例如下
+
+```php
+<?php
+
+declare(strict_types=1);
+
+return [
+    'handler' => [
+        'http' => [
+            \Hrb981027\TreasureBag\Exception\Handler\StandardExceptionHandler::class,
+            Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class,
+            App\Exception\Handler\AppExceptionHandler::class,
+        ],
+    ],
+];
 ```

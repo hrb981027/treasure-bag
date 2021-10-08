@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TreasureBag\Exception;
+namespace Hrb981027\TreasureBag\Exception;
 
 use RuntimeException;
 

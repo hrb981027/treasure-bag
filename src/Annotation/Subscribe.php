@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TreasureBag\Annotation;
+namespace Hrb981027\TreasureBag\Annotation;
 
 use Hyperf\Di\Annotation\AbstractAnnotation;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TreasureBag\Parental;
+namespace Hrb981027\TreasureBag\Parental;
 
 use Hyperf\Utils\Str;
 

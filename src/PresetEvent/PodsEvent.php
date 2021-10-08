@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TreasureBag\PresetEvent;
+namespace Hrb981027\TreasureBag\PresetEvent;
 
 class PodsEvent
 {

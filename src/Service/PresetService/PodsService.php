@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace TreasureBag\Service\PresetService;
+namespace Hrb981027\TreasureBag\Service\PresetService;
 
-use TreasureBag\PresetEvent\PodsEvent;
+use Hrb981027\TreasureBag\PresetEvent\PodsEvent;
 
 class PodsService
 {

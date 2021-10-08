@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TreasureBag\Service;
+namespace Hrb981027\TreasureBag\Service;
 
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\Exception\GuzzleException;

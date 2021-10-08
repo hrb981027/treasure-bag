@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace TreasureBag\Service;
+namespace Hrb981027\TreasureBag\Service;
 
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Guzzle\ClientFactory;
-use TreasureBag\Exception\InvalidEventBusConnectionException;
+use Hrb981027\TreasureBag\Exception\InvalidEventBusConnectionException;
 
 class EventClient
 {

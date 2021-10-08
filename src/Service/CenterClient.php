@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TreasureBag\Service;
+namespace Hrb981027\TreasureBag\Service;
 
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\Exception\GuzzleException;
@@ -13,9 +13,9 @@ use Hyperf\HttpServer\Annotation\AutoController;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Router\DispatcherFactory;
 use Hyperf\Utils\Str;
-use TreasureBag\Annotation\Secure;
-use TreasureBag\Annotation\Subscribe;
-use TreasureBag\Exception\InvalidCenterConnectionException;
+use Hrb981027\TreasureBag\Annotation\Secure;
+use Hrb981027\TreasureBag\Annotation\Subscribe;
+use Hrb981027\TreasureBag\Exception\InvalidCenterConnectionException;
 
 class CenterClient
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace HyperfTest\Cases;
 
 use Hyperf\Database\Model\Model;
-use TreasureBag\Parental\HasChildren;
+use Hrb981027\TreasureBag\Parental\HasChildren;
 
 class HasChildrenTest extends AbstractTestCase
 {
