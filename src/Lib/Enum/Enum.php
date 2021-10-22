@@ -4,6 +4,9 @@ namespace Hrb981027\TreasureBag\Lib\Enum;
 
 use Hyperf\Constants\AbstractConstants;
 
+/**
+ * @method static string getMessage($mixed)
+ */
 class Enum extends AbstractConstants
 {
     public static function toArray()
