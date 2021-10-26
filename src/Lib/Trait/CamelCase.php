@@ -10,7 +10,7 @@ trait CamelCase
 {
     public function getAttribute($key)
     {
-        return parent::getAttribute($key) ?? parent::getAttribute(Str::snake($key));
+        return parent::getAttribute(Str::snake($key)) ?? parent::getAttribute($key);
     }
 
     public function setAttribute($key, $value)
