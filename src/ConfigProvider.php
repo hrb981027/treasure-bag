@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TreasureBag;
+namespace Hrb981027\TreasureBag;
 
 class ConfigProvider
 {
