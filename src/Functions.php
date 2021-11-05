@@ -134,3 +134,60 @@ if (!function_exists('stringEval')) {
         return $string;
     }
 }
+
+if (!function_exists('isBase64')) {
+    /**
+     * 判断是否是base64编码
+     * @param string|int $content
+     * @return bool
+     */
+    function isBase64(string|int $content): bool
+    {
+        if (@PReg_match('/^[0-9]*$/', $content) || @preg_match('/^[a-zA-Z]*$/', $content)) {
+            return false;
+        } elseif (isUtf8(base64_decode($content)) && base64_decode($content) != '') {
+            return true;
+        }
+        return false;
+    }
+}
+
+if (!function_exists('isUtf8')) {
+    /**
+     * 判断是否是utf8编码
+     * @param string|int $content
+     * @return bool
+     */
+    function isUtf8(string|int $content): bool
+    {
+        $len = strlen($content);
+        for ($i = 0; $i < $len; $i++) {
+            $c = ord($content[$i]);
+            if ($c > 128) {
+                if (($c > 247)) {
+                    return false;
+                } elseif ($c > 239) {
+                    $bytes = 4;
+                } elseif ($c > 223) {
+                    $bytes = 3;
+                } elseif ($c > 191) {
+                    $bytes = 2;
+                } else {
+                    return false;
+                }
+                if (($i + $bytes) > $len) {
+                    return false;
+                }
+                while ($bytes > 1) {
+                    $i++;
+                    $b = ord($content[$i]);
+                    if ($b < 128 || $b > 191) {
+                        return false;
+                    }
+                    $bytes--;
+                }
+            }
+        }
+        return true;
+    }
+}

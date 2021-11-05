@@ -23,6 +23,8 @@ Fork 的 [calebporzio/parental](https://github.com/calebporzio/parental) 包，�
 - `unCamelize` _文本小驼峰转下划线_
 - `arrayEval` _解析数组中的变量_
 - `stringEval` _解析文本中的变量_
+- `isBase64` _判断是否是base64编码_
+- `isUtf8` _判断是否是utf8编码_
 
 ## 服务中心 SDK
 
