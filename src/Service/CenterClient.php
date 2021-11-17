@@ -120,7 +120,7 @@ class CenterClient
 
         foreach ($collector as $className => $metadata) {
             if (isset($metadata['_c']) && $this->hasSecurityAnnotation($metadata['_c'])) {
-                $routePath = $this->getControllerRoutePath($this->routeData, $className, $metadata['_c']);
+                $routePath = $this->getControllerRoutePath($className, $metadata['_c']);
 
                 if ($routePath == '') {
                     continue;
@@ -141,7 +141,7 @@ class CenterClient
                         continue;
                     }
 
-                    $routePath = $this->getMethodRoutePath($this->routeData, $className, $methodName);
+                    $routePath = $this->getMethodRoutePath($className, $methodName);
 
                     if ($routePath == '') {
                         continue;
@@ -169,7 +169,7 @@ class CenterClient
                     continue;
                 }
 
-                $methodRoute = $this->getMethodRoute($this->routeData, $className, $methodName);
+                $methodRoute = $this->getMethodRoute($className, $methodName);
 
                 $routePath = '';
 
@@ -247,9 +247,9 @@ class CenterClient
         return isset($item[Subscribe::class]);
     }
 
-    protected function getControllerRoutePath(array $routeData, string $className, array $item): string
+    protected function getControllerRoutePath(string $className, array $item): string
     {
-        if (!isset($routeData[$className])) {
+        if (!isset($this->routeData[$className])) {
             return '';
         }
 
@@ -275,18 +275,18 @@ class CenterClient
         return $routePath;
     }
 
-    protected function getMethodRoute(array $routeData, string $className, string $methodName): array
+    protected function getMethodRoute(string $className, string $methodName): array
     {
-        if (!isset($routeData[$className]) || !isset($routeData[$className][$methodName])) {
+        if (!isset($this->routeData[$className]) || !isset($this->routeData[$className][$methodName])) {
             return [];
         }
 
-        return $routeData[$className][$methodName];
+        return $this->routeData[$className][$methodName];
     }
 
-    protected function getMethodRoutePath(array $routeData, string $className, string $methodName): string
+    protected function getMethodRoutePath(string $className, string $methodName): string
     {
-        $methodRoute = $this->getMethodRoute($routeData, $className, $methodName);
+        $methodRoute = $this->getMethodRoute($className, $methodName);
 
         if (empty($methodRoute)) {
             return '';
