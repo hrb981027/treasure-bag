@@ -368,7 +368,7 @@ class ApiController extends AbstractController
 
 ## 枚举类
 
-`Enum` 类提供了 `toArray` 和 `inArray` 方法，如需使用该方法，可继承此类
+`Hrb981027\TreasureBag\Lib\Enum\Enum` 类提供了 `toArray` 和 `inArray` 方法，如需使用该方法，可继承此类
 
 ## 标准响应
 
@@ -429,4 +429,395 @@ return [
         ],
     ],
 ];
+```
+
+## 参数类
+
+继承 `Hrb981027\TreasureBag\Lib\Param\AbstractParam` 类可实现：构造函数数组递归赋值、自动校验属性类型和必填性、转数组，继承该类的同时也必须携带相关 `注解`，赋值时数组键名和属性名对应关系为`snake风格 —> 小驼峰风格`，转数组时为 `小驼峰风格 —> snake风格`
+
+### 普通用法
+
+继承 `AbstractParam` 类并携带相关 `注解`，示例如下
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Param\Api\Test;
+
+use Hrb981027\TreasureBag\Annotation\Param;
+use Hrb981027\TreasureBag\Annotation\ParamProperty;
+use Hrb981027\TreasureBag\Lib\Param\AbstractParam;
+
+/**
+ * @Param()
+ */
+class Data extends AbstractParam
+{
+    /**
+     * @ParamProperty()
+     */
+    public int $data1;
+
+    /**
+     * @ParamProperty()
+     */
+    public string $data2;
+}
+```
+
+使用如下
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use App\Param\Api\Test\Data as TestData;
+use Hrb981027\TreasureBag\Lib\Enum\ResponseCode;
+use Hrb981027\TreasureBag\Lib\ResponseContent\StandardResponseContent;
+use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\RequestMapping;
+use Psr\Http\Message\ResponseInterface;
+
+/**
+ * @Controller()
+ */
+class ApiController extends AbstractController
+{
+    /**
+     * @RequestMapping(path="test", methods={"POST"})
+     */
+    public function test(): ResponseInterface
+    {
+        $data = new TestData([
+            'data1' => 1,
+            'data2' => "1"
+        ]);
+
+        $standardResponseContent = new StandardResponseContent();
+
+        $standardResponseContent->setCode(ResponseCode::SUCCESS);
+        $standardResponseContent->setMessage('成功');
+        $standardResponseContent->setData($data->toArray());
+
+        return $this->response->json($standardResponseContent->toArray());
+    }
+}
+```
+
+### 数组内类型定义
+
+如果需要定义一个整型的集合（数组），通过 `@var int[]` 定义，示例如下
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Param\Api\Test;
+
+use Hrb981027\TreasureBag\Annotation\Param;
+use Hrb981027\TreasureBag\Annotation\ParamProperty;
+use Hrb981027\TreasureBag\Lib\Param\AbstractParam;
+
+/**
+ * @Param()
+ */
+class Data extends AbstractParam
+{
+    /**
+     * @ParamProperty()
+     * @var int[]
+     */
+    public array $data1;
+
+    /**
+     * @ParamProperty()
+     */
+    public string $data2;
+}
+```
+
+### 修改赋值或转数组时数组键名对应属性名的默认处理函数
+
+赋值时数组键名和属性名对应关系为`snake风格 —> 小驼峰风格`，转数组时为 `小驼峰风格 —> snake风格`，可以通过 `@Param` 的 `inHandle` 和 `outHandle` 参数来修改默认的处理函数
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Param\Api\Test;
+
+use Hrb981027\TreasureBag\Annotation\Param;
+use Hrb981027\TreasureBag\Annotation\ParamProperty;
+use Hrb981027\TreasureBag\Lib\Param\AbstractParam;
+
+/**
+ * @Param(inHandle="camelize")
+ */
+class Data extends AbstractParam
+{
+    /**
+     * @ParamProperty()
+     */
+    public array $data1;
+
+    /**
+     * @ParamProperty()
+     */
+    public string $data2;
+}
+```
+
+### 单个属性赋值或转数组时，键名单独对应
+
+可能会出现个别奇葩的属性在赋值或者转数组时，键名的转换并不是和其他属性的处理模式一样，这时可以通过 `@ParamProperty` 的 `in` 和 `out` 参数来单独定义该属性对应数组的键名，此处只能传入固定值，示例如下
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Param\Api\Test;
+
+use Hrb981027\TreasureBag\Annotation\Param;
+use Hrb981027\TreasureBag\Annotation\ParamProperty;
+use Hrb981027\TreasureBag\Lib\Param\AbstractParam;
+
+/**
+ * @Param()
+ */
+class Data extends AbstractParam
+{
+    /**
+     * @ParamProperty(in="test1", out="test2")
+     */
+    public int $data1;
+
+    /**
+     * @ParamProperty()
+     */
+    public string $data2;
+}
+```
+
+使用如下
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use App\Param\Api\Test\Data as TestData;
+use Hrb981027\TreasureBag\Lib\Enum\ResponseCode;
+use Hrb981027\TreasureBag\Lib\ResponseContent\StandardResponseContent;
+use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\RequestMapping;
+use Psr\Http\Message\ResponseInterface;
+
+/**
+ * @Controller()
+ */
+class ApiController extends AbstractController
+{
+    /**
+     * @RequestMapping(path="test", methods={"POST"})
+     */
+    public function test(): ResponseInterface
+    {
+        $data = new TestData([
+            'test1' => 1,
+            'data2' => "1"
+        ]);
+
+        $standardResponseContent = new StandardResponseContent();
+
+        $standardResponseContent->setCode(ResponseCode::SUCCESS);
+        $standardResponseContent->setMessage('成功');
+        $standardResponseContent->setData($data->toArray());
+
+        return $this->response->json($standardResponseContent->toArray());
+    }
+}
+```
+
+### 对参数进行必填和不能为空进行校验
+
+通过设置 `@ParamProperty` 的 `required` 和 `filled` 为 `true` 来开启对该参数的校验，开启 `required` 后该参数必填（可为空），开启 `filled` 后该参数必填且不能为空（使用 `empty` 函数校验）
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Param\Api\Test;
+
+use Hrb981027\TreasureBag\Annotation\Param;
+use Hrb981027\TreasureBag\Annotation\ParamProperty;
+use Hrb981027\TreasureBag\Lib\Param\AbstractParam;
+
+/**
+ * @Param()
+ */
+class Data extends AbstractParam
+{
+    /**
+     * @ParamProperty()
+     */
+    public array $data1;
+
+    /**
+     * @ParamProperty(required=true, filled=true)
+     */
+    public string $data2;
+}
+```
+
+### 属性类型为另一个参数类
+
+属性类型不仅可以为 php 基础数据类型，也可以是另一个参数类（也必须继承 `AbstractParam`，且携带对应的 `注解`），数组内的类型定义必须为参数类的全命名空间，使用 `use` 无效，示例如下
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Param\Api\Test;
+
+use App\Param\User\Add\Def;
+use Hrb981027\TreasureBag\Annotation\Param;
+use Hrb981027\TreasureBag\Annotation\ParamProperty;
+use Hrb981027\TreasureBag\Lib\Param\AbstractParam;
+
+/**
+ * @Param()
+ */
+class Data extends AbstractParam
+{
+    /**
+     * @ParamProperty()
+     * @var \App\Param\User\Add\Def[]
+     */
+    public array $data1;
+
+    /**
+     * @ParamProperty()
+     */
+    public Def $data2;
+}
+```
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Param\User\Add;
+
+use Hrb981027\TreasureBag\Annotation\Param;
+use Hrb981027\TreasureBag\Annotation\ParamProperty;
+use Hrb981027\TreasureBag\Lib\Param\AbstractParam;
+
+/**
+ * @Param()
+ */
+class Def extends AbstractParam
+{
+    /**
+     * @ParamProperty()
+     */
+    public float $def1;
+}
+```
+
+使用如下
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use App\Param\Api\Test\Data as TestData;
+use Hrb981027\TreasureBag\Lib\Enum\ResponseCode;
+use Hrb981027\TreasureBag\Lib\ResponseContent\StandardResponseContent;
+use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\RequestMapping;
+use Psr\Http\Message\ResponseInterface;
+
+/**
+ * @Controller()
+ */
+class ApiController extends AbstractController
+{
+    /**
+     * @RequestMapping(path="test", methods={"POST"})
+     */
+    public function test(): ResponseInterface
+    {
+        $data = new TestData([
+            'data1' => [
+                [
+                    'def1' => 2.1
+                ],
+                [
+                    'def1' => 6.6
+                ]
+            ],
+            'data2' => [
+                'def1' => 1.5
+            ]
+        ]);
+
+        $standardResponseContent = new StandardResponseContent();
+
+        $standardResponseContent->setCode(ResponseCode::SUCCESS);
+        $standardResponseContent->setMessage('成功');
+        $standardResponseContent->setData($data->toArray());
+
+        return $this->response->json($standardResponseContent->toArray());
+    }
+}
+```
+
+### 个别属性不想被外部赋值或转数组时输出
+
+通过设置 `@ParamProperty` 的 `allowIn` 和 `allowOut` 参数来开关是否允许输入输出，示例如下
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Param\Api\Test;
+
+use Hrb981027\TreasureBag\Annotation\Param;
+use Hrb981027\TreasureBag\Annotation\ParamProperty;
+use Hrb981027\TreasureBag\Lib\Param\AbstractParam;
+
+/**
+ * @Param()
+ */
+class Data extends AbstractParam
+{
+    /**
+     * @ParamProperty()
+     */
+    public array $data1;
+
+    /**
+     * @ParamProperty(allowIn=false)
+     */
+    public int $data2 = 66;
+
+    /**
+     * @ParamProperty(allowOut=false)
+     */
+    public string $data3;
+}
 ```
