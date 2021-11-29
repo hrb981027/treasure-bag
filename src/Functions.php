@@ -191,3 +191,16 @@ if (!function_exists('isUtf8')) {
         return true;
     }
 }
+
+if (!function_exists('imgUrlToBase64')) {
+    /**
+     * 图片URL转Base64
+     * @param string $url
+     * @return string
+     */
+    function imgUrlToBase64(string $url): string
+    {
+        $imgInfo = getimagesize($url);
+        return 'data:' . $imgInfo['mime'] . ';base64,' . base64_encode(file_get_contents($url));
+    }
+}

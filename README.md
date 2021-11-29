@@ -25,6 +25,7 @@ Fork 的 [calebporzio/parental](https://github.com/calebporzio/parental) 包，�
 - `stringEval` _解析文本中的变量_
 - `isBase64` _判断是否是base64编码_
 - `isUtf8` _判断是否是utf8编码_
+- `imgUrlToBase64` _图片URL转Base64_
 
 ## 服务中心 SDK
 
@@ -330,7 +331,8 @@ class ApiController extends AbstractController
 
 ##### 订阅
 
-目前只能通过`注解`的形式标注订阅事件的接收 URL，带有该注解时，方法必须要有对应路由且请求方式必须含有`POST`（config/routes.php 配置同样生效），否则无效。通过设置 topic 参数设置需要订阅的事件`（可多个）`，事件名称可使用预设的枚举类，示例如下
+目前只能通过`注解`的形式标注订阅事件的接收 URL，带有该注解时，方法必须要有对应路由且请求方式必须含有`POST`（config/routes.php 配置同样生效），否则无效。通过设置 topic 参数设置需要订阅的事件`（可多个）`
+，事件名称可使用预设的枚举类，示例如下
 
 ```php
 <?php
@@ -413,7 +415,8 @@ class ApiController extends AbstractController
 
 ## 标准异常处理
 
-配置文件位于 `config/autoload/exceptions.php` 将 `\Hrb981027\TreasureBag\Exception\Handler\StandardExceptionHandler::class` 配置在对应的 `server` 下即可，示例如下
+配置文件位于 `config/autoload/exceptions.php` 将 `\Hrb981027\TreasureBag\Exception\Handler\StandardExceptionHandler::class`
+配置在对应的 `server` 下即可，示例如下
 
 ```php
 <?php
@@ -433,7 +436,8 @@ return [
 
 ## 参数类
 
-继承 `Hrb981027\TreasureBag\Lib\Param\AbstractParam` 类可实现：构造函数数组递归赋值、自动校验属性类型和必填性、转数组，继承该类的同时也必须携带相关 `注解`，赋值时数组键名和属性名对应关系为`snake风格 —> 小驼峰风格`，转数组时为 `小驼峰风格 —> snake风格`
+继承 `Hrb981027\TreasureBag\Lib\Param\AbstractParam` 类可实现：构造函数数组递归赋值、自动校验属性类型和必填性、转数组，继承该类的同时也必须携带相关 `注解`
+，赋值时数组键名和属性名对应关系为`snake风格 —> 小驼峰风格`，转数组时为 `小驼峰风格 —> snake风格`
 
 ### 普通用法
 
@@ -577,6 +581,7 @@ class Data extends AbstractParam
 ### 单个属性赋值或转数组时，键名单独对应
 
 可能会出现个别奇葩的属性在赋值或者转数组时，键名的转换并不是和其他属性的处理模式一样，这时可以通过 `@ParamProperty` 的 `in` 和 `out` 参数来单独定义该属性对应数组的键名，此处只能传入固定值，示例如下
+
 ```php
 <?php
 
@@ -649,7 +654,9 @@ class ApiController extends AbstractController
 
 ### 对参数进行必填和不能为空进行校验
 
-通过设置 `@ParamProperty` 的 `required` 和 `filled` 为 `true` 来开启对该参数的校验，开启 `required` 后该参数必填（可为空），开启 `filled` 后该参数必填且不能为空（使用 `empty` 函数校验）
+通过设置 `@ParamProperty` 的 `required` 和 `filled` 为 `true` 来开启对该参数的校验，开启 `required` 后该参数必填（可为空），开启 `filled`
+后该参数必填且不能为空（使用 `empty` 函数校验）
+
 ```php
 <?php
 
@@ -789,6 +796,7 @@ class ApiController extends AbstractController
 ### 个别属性不想被外部赋值或转数组时输出
 
 通过设置 `@ParamProperty` 的 `allowIn` 和 `allowOut` 参数来开关是否允许输入输出，示例如下
+
 ```php
 <?php
 
