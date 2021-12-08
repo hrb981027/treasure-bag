@@ -8,7 +8,7 @@ use Hrb981027\TreasureBag\Lib\Enum\ResponseCode;
 
 class StandardResponseContent
 {
-    private int $code;
+    private int|string $code;
 
     private string $message;
 
@@ -26,7 +26,7 @@ class StandardResponseContent
         return $this->code;
     }
 
-    public function setCode(int $code): self
+    public function setCode(int|string $code): self
     {
         $this->code = $code;
 
